@@ -5,15 +5,12 @@ namespace NAttreid\BPayment;
 use NAttreid\BPayment\Helpers\Item;
 use NAttreid\Form\Form;
 use Nette\Application\UI\Control;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Http\Request;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 
 /**
  * Class BPaymentClient
- *
- * property-read SubmitButton $button
  *
  * @author Attreid <attreid@gmail.com>
  */
@@ -36,19 +33,10 @@ class BPaymentClient extends Control
 	private $orderId;
 
 	/** @var string */
-	private $currency = 'CZK';
+	private $currency = 'EUR';
 
 	/** @var string */
-	private $language = 'CZ';
-
-	/** @var string */
-	private $successUrl;
-
-	/** @var string */
-	private $cancelUrl;
-
-	/** @var string */
-	private $errorUrl;
+	private $language = 'EN';
 
 	/** @var Item[] */
 	private $items;
@@ -56,14 +44,23 @@ class BPaymentClient extends Control
 	/** @var float */
 	private $amount;
 
-	/** @var SubmitButton */
-	private $button;
-
 	/** @var SessionSection */
 	private $session;
 
 	/** @var Request */
 	private $request;
+
+	/** @var string */
+	private $button = 'button.latte';
+
+	/** @var callback[] */
+	public $onSuccess = [];
+
+	/** @var callback[] */
+	public $onCancel = [];
+
+	/** @var callback[] */
+	public $onError = [];
 
 	public function __construct($url, $secretKey, $merchantNumber, $gatewayId, Session $session, Request $request)
 	{
@@ -77,6 +74,40 @@ class BPaymentClient extends Control
 		$this->session->setExpiration('3 hours');
 
 		$this->request = $request;
+	}
+
+	public function handleSuccess()
+	{
+		if ($this->verify()) {
+			foreach ($this->onSuccess as $callback) {
+				$callback($this->request->getPost('orderid'), $this->request->getPost('authorizationcode'));
+			}
+		} else {
+			$this->handleError();
+		}
+	}
+
+	public function handleError()
+	{
+		foreach ($this->onError as $callback) {
+			$callback($this->request->getPost('errorcode'), $this->request->getPost('errordescription'));
+		}
+	}
+
+	public function handleCancel()
+	{
+		foreach ($this->onCancel as $callback) {
+			$callback();
+		}
+	}
+
+	/**
+	 * Nastavi sablonu tlacitka
+	 * @param string $button
+	 */
+	public function setButton($button)
+	{
+		$this->button = (string)$button;
 	}
 
 	/**
@@ -106,33 +137,6 @@ class BPaymentClient extends Control
 	}
 
 	/**
-	 * Adresa po uspesnem provedeni platby
-	 * @param string $successUrl
-	 */
-	public function setSuccessUrl($successUrl)
-	{
-		$this->successUrl = (string)$successUrl;
-	}
-
-	/**
-	 * Adresa po zruseni platby.
-	 * @param string $cancelUrl
-	 */
-	public function setCancelUrl($cancelUrl)
-	{
-		$this->cancelUrl = (string)$cancelUrl;
-	}
-
-	/**
-	 * Adresa pri chybe brany
-	 * @param string $errorUrl
-	 */
-	public function setErrorUrl($errorUrl)
-	{
-		$this->errorUrl = (string)$errorUrl;
-	}
-
-	/**
 	 * Prida polozku do brany
 	 * @param string $name
 	 * @param int $count
@@ -145,17 +149,13 @@ class BPaymentClient extends Control
 		$this->amount += $item->totalPrice;
 	}
 
-	/**
-	 * @return SubmitButton
-	 */
-	protected function getButton()
-	{
-		return $this->button;
-	}
-
 	protected function createComponentPaymentForm()
 	{
-		$hash = $this->hash($this->merchantNumber, $this->successUrl, $this->successUrl, $this->orderId, $this->amount, $this->currency);
+		$successLink = $this->link('//success');
+		$cancelLink = $this->link('//cancel');
+		$errorLink = $this->link('//error');
+
+		$hash = $this->hash($this->merchantNumber, $successLink, $successLink, $this->orderId, $this->amount, $this->currency);
 
 		$this->session->orderHash = $this->hash($this->orderId, $this->amount, $this->currency);
 
@@ -169,13 +169,9 @@ class BPaymentClient extends Control
 		$form->addHidden('checkhash', $hash);
 		$form->addHidden('currency', $this->currency);
 		$form->addHidden('language', $this->language);
-		$form->addHidden('returnurlsuccess', $this->successUrl);
-		if ($this->cancelUrl !== null) {
-			$form->addHidden('returnurlcancel', $this->cancelUrl);
-		}
-		if ($this->errorUrl !== null) {
-			$form->addHidden('returnurlerror', $this->errorUrl);
-		}
+		$form->addHidden('returnurlsuccess', $successLink);
+		$form->addHidden('returnurlcancel', $cancelLink);
+		$form->addHidden('returnurlerror', $errorLink);
 
 		foreach ($this->items as $key => $item) {
 			$form->addHidden('itemdescription_' . $key, $item->name);
@@ -185,8 +181,6 @@ class BPaymentClient extends Control
 		}
 		$form->addHidden('amount', $this->amount);
 
-		$this->button = $form->addSubmit('submit');
-
 		return $form;
 	}
 
@@ -194,7 +188,7 @@ class BPaymentClient extends Control
 	 * Verifikuje platbu
 	 * @return bool
 	 */
-	public function verify()
+	private function verify()
 	{
 		$orderhash = $this->request->getPost('orderhash');
 		if ($orderhash === $this->session->orderHash) {
@@ -215,6 +209,7 @@ class BPaymentClient extends Control
 	public function render()
 	{
 		$this->template->setFile(__DIR__ . '/bpayment.latte');
+		$this->template->button = $this->button;
 		$this->template->render();
 	}
 }

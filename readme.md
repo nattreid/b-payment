@@ -16,20 +16,25 @@ bPayments:
 /** @var \NAttreid\BPayment\IBPaymentClientFactory @inject */
 public $bPaymentFactory;
 
-protected function createComponentBPayment() {
-    $bPayment = $this->$bPaymentFactory->create();
+protected function createComponentBPayment($name) {
+    $bPayment = $this->$bPaymentFactory->create($this, $name);
     
-    $bPayment->setCancelUrl('//someUrl');
-    $bPayment->setErrorUrl('//someUrl');
-    $bPayment->setSuccessUrl('//someUrl');
     $bPayment->setOrderId(123456);
     $bPayment->setCurrency('CZK');
     $bPayment->setLanguage('CZ');
     $bPayment->addItem('Polozka', 4, 999.9);
 
-    // uprava tlacitka
-    $bPayment->button->value = 'Odeslat';
-    $bPayment->button->setAttribute('class', 'button');
+    $bPayment->setButton(__DIR__.'/button.latte'); // zmena sablony tlacitka
+    
+    $bPayment->onSuccess[] = function($orderId, $authorizationCode) {
+        
+    }
+    $bPayment->onError[] = function($errorCode, $errorDescription) {
+        
+    }
+    $bPayment->onCancel[] = function() {
+        
+    }
     
     return $bPayment;
 }

@@ -19,6 +19,15 @@ class Item
 
 	use SmartObject;
 
+	/** @var string */
+	private $name;
+
+	/** @var int */
+	private $count;
+
+	/** @var float */
+	private $price;
+
 	/**
 	 * Item constructor.
 	 * @param string $name
