@@ -1,6 +1,6 @@
 {
-  "name": "nattreid/gpe",
-  "description": "B Payment for Nette Framework",
+  "name": "nattreid/b-payment",
+  "description": "B-Payment for Nette Framework",
   "type": "library",
   "license": [
     "Unlicense"
