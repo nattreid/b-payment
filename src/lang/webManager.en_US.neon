@@ -1,0 +1,7 @@
+web:
+    hooks:
+        bPayment:
+            title: "B-Payment"
+            secretKey: "Your 'Secret Key'"
+            merchantNumber: "Your 'Merchant ID'"
+            gatewayId: "Your 'Gateway ID'"

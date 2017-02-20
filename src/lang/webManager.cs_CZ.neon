@@ -1,0 +1,7 @@
+web:
+    hooks:
+        bPayment:
+            title: "B-Payment"
+            secretKey: "Váš 'Secret Key'"
+            merchantNumber: "Vaše 'Merchant ID'"
+            gatewayId: "Vaše 'Gateway ID'"

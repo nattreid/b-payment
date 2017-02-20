@@ -3,8 +3,13 @@
 namespace NAttreid\BPayment\DI;
 
 use NAttreid\BPayment\BPaymentClient;
+use NAttreid\BPayment\Hooks\BPaymentHook;
 use NAttreid\BPayment\IBPaymentClientFactory;
+use NAttreid\Cms\Configurator\Configurator;
+use NAttreid\Cms\ExtensionTranslatorTrait;
+use NAttreid\WebManager\Services\Hooks\HookService;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Statement;
 use Nette\InvalidStateException;
 
 /**
@@ -14,6 +19,9 @@ use Nette\InvalidStateException;
  */
 class BPaymentExtension extends CompilerExtension
 {
+
+	use ExtensionTranslatorTrait;
+
 	private $defaults = [
 		'secretKey' => null,
 		'url' => null,
@@ -25,6 +33,20 @@ class BPaymentExtension extends CompilerExtension
 	{
 		$config = $this->validateConfig($this->defaults, $this->getConfig());
 		$builder = $this->getContainerBuilder();
+
+		$hook = $builder->getByType(HookService::class);
+		if ($hook) {
+			$builder->addDefinition($this->prefix('hook'))
+				->setClass(BPaymentHook::class);
+
+			$this->setTranslation(__DIR__ . '/../lang/', [
+				'webManager'
+			]);
+
+			$config['secretKey'] = new Statement('?->bPaymentSecretKey', ['@' . Configurator::class]);
+			$config['merchantNumber'] = new Statement('?->bPaymentMerchantNumber', ['@' . Configurator::class]);
+			$config['gatewayId'] = new Statement('?->bPaymentGatewayId', ['@' . Configurator::class]);
+		}
 
 		if ($config['secretKey'] === null) {
 			throw new InvalidStateException("B-Payment: 'secretKey' does not set in config.neon");
