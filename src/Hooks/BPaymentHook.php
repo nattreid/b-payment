@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\BPayment\Hooks;
 
 use NAttreid\Form\Form;
 use NAttreid\WebManager\Services\Hooks\HookFactory;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class BPaymentHook
@@ -17,7 +20,7 @@ class BPaymentHook extends HookFactory
 	protected $configurator;
 
 	/** @return Form */
-	public function create()
+	public function create(): Form
 	{
 		$form = $this->formFactory->create();
 		$form->setAjaxRequest();
@@ -36,7 +39,7 @@ class BPaymentHook extends HookFactory
 		return $form;
 	}
 
-	public function bPaymentFormSucceeded(Form $form, $values)
+	public function bPaymentFormSucceeded(Form $form, ArrayHash $values)
 	{
 		$this->configurator->bPaymentSecretKey = $values->secretKey;
 		$this->configurator->bPaymentMerchantNumber = $values->merchantNumber;

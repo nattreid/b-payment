@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\BPayment\Helpers;
 
 use Nette\SmartObject;
@@ -28,13 +30,7 @@ class Item
 	/** @var float */
 	private $price;
 
-	/**
-	 * Item constructor.
-	 * @param string $name
-	 * @param int $count
-	 * @param float $price
-	 */
-	public function __construct($name, $count, $price)
+	public function __construct(string $name, int $count, float $price)
 	{
 		$this->name = (string)$name;
 		$this->count = intval($count);
@@ -44,7 +40,7 @@ class Item
 	/**
 	 * @return string
 	 */
-	protected function getName()
+	protected function getName(): string
 	{
 		return $this->name;
 	}
@@ -52,7 +48,7 @@ class Item
 	/**
 	 * @return int
 	 */
-	protected function getCount()
+	protected function getCount(): int
 	{
 		return $this->count;
 	}
@@ -60,7 +56,7 @@ class Item
 	/**
 	 * @return float
 	 */
-	protected function getPrice()
+	protected function getPrice(): float
 	{
 		return $this->price;
 	}
@@ -68,7 +64,7 @@ class Item
 	/**
 	 * @return float
 	 */
-	protected function getTotalPrice()
+	protected function getTotalPrice(): float
 	{
 		return $this->price * $this->count;
 	}

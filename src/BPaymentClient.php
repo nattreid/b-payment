@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace NAttreid\BPayment;
 
 use NAttreid\BPayment\Helpers\Item;
@@ -62,7 +64,7 @@ class BPaymentClient extends Control
 	/** @var callback[] */
 	public $onError = [];
 
-	public function __construct($url, $secretKey, $merchantNumber, $gatewayId, Session $session, Request $request)
+	public function __construct(string $url, string $secretKey, int $merchantNumber, int $gatewayId, Session $session, Request $request)
 	{
 		parent::__construct();
 		$this->url = $url;
@@ -105,35 +107,35 @@ class BPaymentClient extends Control
 	 * Nastavi sablonu tlacitka
 	 * @param string $button
 	 */
-	public function setButton($button)
+	public function setButton(string $button)
 	{
-		$this->button = (string)$button;
+		$this->button = $button;
 	}
 
 	/**
 	 * @param int $orderId
 	 */
-	public function setOrderId($orderId)
+	public function setOrderId(int $orderId)
 	{
-		$this->orderId = intval($orderId);
+		$this->orderId = $orderId;
 	}
 
 	/**
 	 * Nastavi menu. Povolene hodnoty jsou GBP, USD, EUR, DKK, NOK, SEK, CHF, CAD, HUF, BHD, AUD, RUB, PLN, RON, HRK, CZK, ISK
 	 * @param string $currency
 	 */
-	public function setCurrency($currency)
+	public function setCurrency(string $currency)
 	{
-		$this->currency = (string)$currency;
+		$this->currency = $currency;
 	}
 
 	/**
 	 * Nastavi jazyk brany. Povolene hodnoty jsou CZ, IS, EN, DE, FR, RU, ES, IT, PT, SI, HU, SE, NL, PL, NO, SK, HR, SR, RO, DK, FI, FO
 	 * @param string $language
 	 */
-	public function setLanguage($language)
+	public function setLanguage(string $language)
 	{
-		$this->language = (string)$language;
+		$this->language = $language;
 	}
 
 	/**
@@ -142,14 +144,14 @@ class BPaymentClient extends Control
 	 * @param int $count
 	 * @param float $price
 	 */
-	public function addItem($name, $count, $price)
+	public function addItem(string $name, int $count, float $price)
 	{
 		$item = new Item($name, $count, $price);
 		$this->items[] = $item;
 		$this->amount += $item->totalPrice;
 	}
 
-	protected function createComponentPaymentForm()
+	protected function createComponentPaymentForm(): Form
 	{
 		$successLink = $this->link('//success');
 		$cancelLink = $this->link('//cancel');
@@ -188,7 +190,7 @@ class BPaymentClient extends Control
 	 * Verifikuje platbu
 	 * @return bool
 	 */
-	private function verify()
+	private function verify(): bool
 	{
 		$orderhash = $this->request->getPost('orderhash');
 		if ($orderhash === $this->session->orderHash) {
@@ -198,10 +200,10 @@ class BPaymentClient extends Control
 	}
 
 	/**
-	 * @param string[] ...$data
+	 * @param mixed[] ...$data
 	 * @return string
 	 */
-	private function hash(...$data)
+	private function hash(...$data): string
 	{
 		return hash_hmac('sha256', implode('|', $data), $this->secretKey);
 	}
@@ -216,6 +218,5 @@ class BPaymentClient extends Control
 
 interface IBPaymentClientFactory
 {
-	/** @return BPaymentClient */
-	public function create();
+	public function create(): BPaymentClient;
 }
