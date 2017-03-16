@@ -81,9 +81,7 @@ class BPaymentClient extends Control
 	public function handleSuccess()
 	{
 		if ($this->verify()) {
-			foreach ($this->onSuccess as $callback) {
-				$callback($this->request->getPost('orderid'), $this->request->getPost('authorizationcode'));
-			}
+			$this->onSuccess($this->request->getPost('orderid'), $this->request->getPost('authorizationcode'));
 		} else {
 			$this->handleError();
 		}
@@ -91,16 +89,12 @@ class BPaymentClient extends Control
 
 	public function handleError()
 	{
-		foreach ($this->onError as $callback) {
-			$callback($this->request->getPost('errorcode'), $this->request->getPost('errordescription'));
-		}
+		$this->onError($this->request->getPost('errorcode'), $this->request->getPost('errordescription'));
 	}
 
 	public function handleCancel()
 	{
-		foreach ($this->onCancel as $callback) {
-			$callback();
-		}
+		$this->onCancel();
 	}
 
 	/**
