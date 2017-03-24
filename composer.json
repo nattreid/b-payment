@@ -3,18 +3,12 @@
   "description": "B-Payment for Nette Framework",
   "type": "library",
   "license": [
-    "Unlicense"
+    "MIT"
   ],
   "authors": [
     {
       "name": "Attreid",
       "email": "attreid@gmail.com"
-    }
-  ],
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://packages.newtravel.cz"
     }
   ],
   "require": {
@@ -26,6 +20,7 @@
   },
   "require-dev": {
     "nette/tester": "~1.7",
+    "tracy/tracy": "~2.4",
     "nattreid/web-manager": "~1.0"
   },
   "autoload": {
