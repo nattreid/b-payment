@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\BPayment;
 
@@ -53,7 +53,7 @@ class BPaymentClient extends Control
 	private $request;
 
 	/** @var string */
-	private $button = 'button.latte';
+	private $button = __DIR__ . '/templates/button.latte';
 
 	/** @var callback[] */
 	public $onSuccess = [];
@@ -78,7 +78,7 @@ class BPaymentClient extends Control
 		$this->request = $request;
 	}
 
-	public function handleSuccess()
+	public function handleSuccess(): void
 	{
 		if ($this->verify()) {
 			$this->onSuccess($this->request->getPost('orderid'), $this->request->getPost('authorizationcode'));
@@ -87,12 +87,12 @@ class BPaymentClient extends Control
 		}
 	}
 
-	public function handleError()
+	public function handleError(): void
 	{
 		$this->onError($this->request->getPost('errorcode'), $this->request->getPost('errordescription'));
 	}
 
-	public function handleCancel()
+	public function handleCancel(): void
 	{
 		$this->onCancel();
 	}
@@ -101,7 +101,7 @@ class BPaymentClient extends Control
 	 * Nastavi sablonu tlacitka
 	 * @param string $button
 	 */
-	public function setButton(string $button)
+	public function setButton(string $button): void
 	{
 		$this->button = $button;
 	}
@@ -109,7 +109,7 @@ class BPaymentClient extends Control
 	/**
 	 * @param int $orderId
 	 */
-	public function setOrderId(int $orderId)
+	public function setOrderId(int $orderId): void
 	{
 		$this->orderId = $orderId;
 	}
@@ -118,7 +118,7 @@ class BPaymentClient extends Control
 	 * Nastavi menu. Povolene hodnoty jsou GBP, USD, EUR, DKK, NOK, SEK, CHF, CAD, HUF, BHD, AUD, RUB, PLN, RON, HRK, CZK, ISK
 	 * @param string $currency
 	 */
-	public function setCurrency(string $currency)
+	public function setCurrency(string $currency): void
 	{
 		$this->currency = $currency;
 	}
@@ -127,7 +127,7 @@ class BPaymentClient extends Control
 	 * Nastavi jazyk brany. Povolene hodnoty jsou CZ, IS, EN, DE, FR, RU, ES, IT, PT, SI, HU, SE, NL, PL, NO, SK, HR, SR, RO, DK, FI, FO
 	 * @param string $language
 	 */
-	public function setLanguage(string $language)
+	public function setLanguage(string $language): void
 	{
 		$this->language = $language;
 	}
@@ -138,7 +138,7 @@ class BPaymentClient extends Control
 	 * @param int $count
 	 * @param float $price
 	 */
-	public function addItem(string $name, int $count, float $price)
+	public function addItem(string $name, int $count, float $price): void
 	{
 		$item = new Item($name, $count, $price);
 		$this->items[] = $item;
@@ -202,9 +202,9 @@ class BPaymentClient extends Control
 		return hash_hmac('sha256', implode('|', $data), $this->secretKey);
 	}
 
-	public function render()
+	public function render(): void
 	{
-		$this->template->setFile(__DIR__ . '/bpayment.latte');
+		$this->template->setFile(__DIR__ . '/templates/bpayment.latte');
 		$this->template->button = $this->button;
 		$this->template->render();
 	}

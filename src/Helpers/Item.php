@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\BPayment\Helpers;
 
@@ -32,9 +32,9 @@ class Item
 
 	public function __construct(string $name, int $count, float $price)
 	{
-		$this->name = (string)$name;
-		$this->count = intval($count);
-		$this->price = floatval($price);
+		$this->name = $name;
+		$this->count = $count;
+		$this->price = $price;
 	}
 
 	/**

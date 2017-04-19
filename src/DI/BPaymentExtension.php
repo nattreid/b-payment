@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace NAttreid\BPayment\DI;
 
@@ -31,7 +31,7 @@ class BPaymentExtension extends CompilerExtension
 		'gatewayId' => null
 	];
 
-	public function loadConfiguration()
+	public function loadConfiguration(): void
 	{
 		$config = $this->validateConfig($this->defaults, $this->getConfig());
 		$builder = $this->getContainerBuilder();

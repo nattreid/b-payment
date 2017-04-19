@@ -40,7 +40,7 @@ class BPaymentHook extends HookFactory
 		return $form;
 	}
 
-	public function bPaymentFormSucceeded(Form $form, ArrayHash $values)
+	public function bPaymentFormSucceeded(Form $form, ArrayHash $values): void
 	{
 		$this->configurator->bPaymentSecretKey = $values->secretKey;
 		$this->configurator->bPaymentMerchantNumber = $values->merchantNumber;
