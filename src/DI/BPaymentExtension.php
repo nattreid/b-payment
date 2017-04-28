@@ -50,7 +50,7 @@ class BPaymentExtension extends CompilerExtension
 				'webManager'
 			]);
 
-			$bPayment = new Statement('?->bPayment \?\? new ' . BPaymentConfig::class, ['@' . Configurator::class]);
+			$bPayment = new Statement('?->bPayment \?: new ' . BPaymentConfig::class, ['@' . Configurator::class]);
 		} else {
 			$bPayment = new BPaymentConfig();
 			$bPayment->secretKey = $config['secretKey'];
