@@ -20,6 +20,13 @@ class BPaymentHook extends HookFactory
 	/** @var IConfigurator */
 	protected $configurator;
 
+	public function init(): void
+	{
+		if (!$this->configurator->bPayment) {
+			$this->configurator->bPayment = new BPaymentConfig;
+		}
+	}
+
 	/** @return Component */
 	public function create(): Component
 	{
@@ -27,11 +34,11 @@ class BPaymentHook extends HookFactory
 		$form->setAjaxRequest();
 
 		$form->addText('secretKey', 'webManager.web.hooks.bPayment.secretKey')
-			->setDefaultValue($this->configurator->bPaymentSecretKey);
-		$form->addText('merchantNumber', 'webManager.web.hooks.bPayment.merchantNumber')
-			->setDefaultValue($this->configurator->bPaymentMerchantNumber);
-		$form->addText('gatewayId', 'webManager.web.hooks.bPayment.gatewayId')
-			->setDefaultValue($this->configurator->bPaymentGatewayId);
+			->setDefaultValue($this->configurator->bPayment->secretKey);
+		$form->addInteger('merchantNumber', 'webManager.web.hooks.bPayment.merchantNumber')
+			->setDefaultValue($this->configurator->bPayment->merchantNumber);
+		$form->addInteger('gatewayId', 'webManager.web.hooks.bPayment.gatewayId')
+			->setDefaultValue($this->configurator->bPayment->gatewayId);
 
 		$form->addSubmit('save', 'form.save');
 
@@ -42,9 +49,13 @@ class BPaymentHook extends HookFactory
 
 	public function bPaymentFormSucceeded(Form $form, ArrayHash $values): void
 	{
-		$this->configurator->bPaymentSecretKey = $values->secretKey;
-		$this->configurator->bPaymentMerchantNumber = $values->merchantNumber;
-		$this->configurator->bPaymentGatewayId = $values->gatewayId;
+		$config = $this->configurator->bPayment;
+
+		$config->secretKey = $values->secretKey ?: null;
+		$config->merchantNumber = $values->merchantNumber ?: null;
+		$config->gatewayId = $values->gatewayId ?: null;
+
+		$this->configurator->bPayment = $config;
 
 		$this->flashNotifier->success('default.dataSaved');
 	}

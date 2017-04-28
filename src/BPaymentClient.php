@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace NAttreid\BPayment;
 
 use NAttreid\BPayment\Helpers\Item;
+use NAttreid\BPayment\Hooks\BPaymentConfig;
 use NAttreid\Form\Form;
 use Nette\Application\UI\Control;
 use Nette\Http\Request;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
+use Nette\InvalidStateException;
 
 /**
  * Class BPaymentClient
@@ -22,14 +24,8 @@ class BPaymentClient extends Control
 	/** @var string */
 	private $url;
 
-	/** @var string */
-	private $secretKey;
-
-	/** @var int */
-	private $merchantNumber;
-
-	/** @var int */
-	private $gatewayId;
+	/** @var BPaymentConfig */
+	private $config;
 
 	/** @var int */
 	private $orderId;
@@ -64,13 +60,21 @@ class BPaymentClient extends Control
 	/** @var callback[] */
 	public $onError = [];
 
-	public function __construct(string $url, string $secretKey, int $merchantNumber, int $gatewayId, Session $session, Request $request)
+	public function __construct(string $url, BPaymentConfig $config, Session $session, Request $request)
 	{
 		parent::__construct();
 		$this->url = $url;
-		$this->secretKey = $secretKey;
-		$this->merchantNumber = $merchantNumber;
-		$this->gatewayId = $gatewayId;
+
+		if ($config->secretKey === null) {
+			throw new InvalidStateException("B-Payment: 'secretKey' does not set");
+		}
+		if ($config->merchantNumber === null) {
+			throw new InvalidStateException("B-Payment: 'merchantNumber' does not set");
+		}
+		if ($config->gatewayId === null) {
+			throw new InvalidStateException("B-Payment: 'gatewayId' does not set");
+		}
+		$this->config = $config;
 
 		$this->session = $session->getSection('b-payment');
 		$this->session->setExpiration('3 hours');
@@ -151,15 +155,15 @@ class BPaymentClient extends Control
 		$cancelLink = $this->link('//cancel');
 		$errorLink = $this->link('//error');
 
-		$hash = $this->hash($this->merchantNumber, $successLink, $successLink, $this->orderId, $this->amount, $this->currency);
+		$hash = $this->hash($this->config->merchantNumber, $successLink, $successLink, $this->orderId, $this->amount, $this->currency);
 
 		$this->session->orderHash = $this->hash($this->orderId, $this->amount, $this->currency);
 
 		$form = new Form;
 		$form->setAction($this->url);
 
-		$form->addHidden('merchantid', $this->merchantNumber);
-		$form->addHidden('paymentgatewayid', $this->gatewayId);
+		$form->addHidden('merchantid', $this->config->merchantNumber);
+		$form->addHidden('paymentgatewayid', $this->config->gatewayId);
 		$form->addHidden('orderid', $this->orderId);
 		$form->addHidden('reference', $this->orderId);
 		$form->addHidden('checkhash', $hash);
@@ -199,7 +203,7 @@ class BPaymentClient extends Control
 	 */
 	private function hash(...$data): string
 	{
-		return hash_hmac('sha256', implode('|', $data), $this->secretKey);
+		return hash_hmac('sha256', implode('|', $data), $this->config->secretKey);
 	}
 
 	public function render(): void

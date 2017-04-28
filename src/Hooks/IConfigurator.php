@@ -7,9 +7,7 @@ namespace NAttreid\BPayment\Hooks;
 /**
  * Interface IConfigurator
  *
- * @property string $bPaymentSecretKey
- * @property string $bPaymentMerchantNumber
- * @property string $bPaymentGatewayId
+ * @property BPaymentConfig $bPayment
  *
  * @author Attreid <attreid@gmail.com>
  */
