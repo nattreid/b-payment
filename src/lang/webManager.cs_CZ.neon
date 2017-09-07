@@ -3,5 +3,5 @@ web:
         bPayment:
             title: "B-Payment"
             secretKey: "Váš 'Secret Key'"
-            merchantNumber: "Vaše 'Merchant ID'"
-            gatewayId: "Vaše 'Gateway ID'"
+            merchantNumber: "Váš 'Merchant number'"
+            gatewayId: "Váš 'Payment gateway'"
