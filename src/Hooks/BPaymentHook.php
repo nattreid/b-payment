@@ -35,8 +35,8 @@ class BPaymentHook extends HookFactory
 
 		$form->addText('secretKey', 'webManager.web.hooks.bPayment.secretKey')
 			->setDefaultValue($this->configurator->bPayment->secretKey);
-		$form->addInteger('merchantNumber', 'webManager.web.hooks.bPayment.merchantNumber')
-			->setDefaultValue($this->configurator->bPayment->merchantNumber);
+		$form->addInteger('merchantId', 'webManager.web.hooks.bPayment.merchantId')
+			->setDefaultValue($this->configurator->bPayment->merchantId);
 		$form->addInteger('gatewayId', 'webManager.web.hooks.bPayment.gatewayId')
 			->setDefaultValue($this->configurator->bPayment->gatewayId);
 
@@ -52,7 +52,7 @@ class BPaymentHook extends HookFactory
 		$config = $this->configurator->bPayment;
 
 		$config->secretKey = $values->secretKey ?: null;
-		$config->merchantNumber = $values->merchantNumber ?: null;
+		$config->merchantId = $values->merchantId ?: null;
 		$config->gatewayId = $values->gatewayId ?: null;
 
 		$this->configurator->bPayment = $config;

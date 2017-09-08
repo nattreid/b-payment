@@ -68,8 +68,8 @@ class BPaymentClient extends Control
 		if ($config->secretKey === null) {
 			throw new InvalidStateException("B-Payment: 'secretKey' does not set");
 		}
-		if ($config->merchantNumber === null) {
-			throw new InvalidStateException("B-Payment: 'merchantNumber' does not set");
+		if ($config->merchantId === null) {
+			throw new InvalidStateException("B-Payment: 'merchantID' does not set");
 		}
 		if ($config->gatewayId === null) {
 			throw new InvalidStateException("B-Payment: 'gatewayId' does not set");
@@ -155,14 +155,14 @@ class BPaymentClient extends Control
 		$cancelLink = $this->link('//cancel');
 		$errorLink = $this->link('//error');
 
-		$hash = $this->hash($this->config->merchantNumber, $successLink, $successLink, $this->orderId, $this->amount, $this->currency);
+		$hash = $this->hash($this->config->merchantId, $successLink, $successLink, $this->orderId, $this->amount, $this->currency);
 
 		$this->session->orderHash = $this->hash($this->orderId, $this->amount, $this->currency);
 
 		$form = new Form;
 		$form->setAction($this->url);
 
-		$form->addHidden('merchantid', $this->config->merchantNumber);
+		$form->addHidden('merchantid', $this->config->merchantId);
 		$form->addHidden('paymentgatewayid', $this->config->gatewayId);
 		$form->addHidden('orderid', $this->orderId);
 		$form->addHidden('reference', $this->orderId);

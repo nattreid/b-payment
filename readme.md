@@ -7,8 +7,8 @@ extensions:
 bPayments:
     secretKey: 'xxx1234x4xx54x65x456x4x88x9x987x'
     url: 'https://securepay.borgun.is/securepay/default.aspx'
-    merchantNumber: 12345
-    gatewayId: 1234567
+    merchantId: 1234567
+    gatewayId: 12345
 ```
 
 ### Použití

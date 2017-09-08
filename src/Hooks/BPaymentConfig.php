@@ -10,7 +10,7 @@ use Nette\SmartObject;
  * Class BPaymentConfig
  *
  * @property string $secretKey
- * @property int $merchantNumber
+ * @property int $merchantId
  * @property int $gatewayId
  *
  * @author Attreid <attreid@gmail.com>
@@ -23,7 +23,7 @@ class BPaymentConfig
 	private $secretKey;
 
 	/** @var int */
-	private $merchantNumber;
+	private $merchantId;
 
 	/** @var int */
 	private $gatewayId;
@@ -38,14 +38,14 @@ class BPaymentConfig
 		$this->secretKey = $secretKey;
 	}
 
-	protected function getMerchantNumber(): ?int
+	protected function getMerchantId(): ?int
 	{
-		return $this->merchantNumber;
+		return $this->merchantId;
 	}
 
-	protected function setMerchantNumber(?int $merchantNumber)
+	protected function setMerchantId(?int $merchantId)
 	{
-		$this->merchantNumber = $merchantNumber;
+		$this->merchantId = $merchantId;
 	}
 
 	protected function getGatewayId(): ?int

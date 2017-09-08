@@ -28,7 +28,7 @@ class BPaymentExtension extends CompilerExtension
 	private $defaults = [
 		'secretKey' => null,
 		'url' => null,
-		'merchantNumber' => null,
+		'merchantId' => null,
 		'gatewayId' => null
 	];
 
@@ -54,7 +54,7 @@ class BPaymentExtension extends CompilerExtension
 		} else {
 			$bPayment = new BPaymentConfig();
 			$bPayment->secretKey = $config['secretKey'];
-			$bPayment->merchantNumber = $config['merchantNumber'];
+			$bPayment->merchantId = $config['merchantId'];
 			$bPayment->gatewayId = $config['gatewayId'];
 		}
 
