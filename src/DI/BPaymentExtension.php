@@ -44,7 +44,7 @@ class BPaymentExtension extends CompilerExtension
 		$hook = $builder->getByType(HookService::class);
 		if ($hook) {
 			$builder->addDefinition($this->prefix('hook'))
-				->setClass(BPaymentHook::class);
+				->setType(BPaymentHook::class);
 
 			$this->setTranslation(__DIR__ . '/../lang/', [
 				'webManager'
