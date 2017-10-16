@@ -39,6 +39,8 @@ class BPaymentClient extends Control
 	/** @var Item[] */
 	private $items;
 
+	private $redirectAfterPayment = true;
+
 	/** @var float */
 	private $amount;
 
@@ -101,39 +103,52 @@ class BPaymentClient extends Control
 		$this->onCancel();
 	}
 
+	public function setRedirectAfterPayment(bool $redirect = false): void
+	{
+		$this->redirectAfterPayment = $redirect;
+	}
+
 	/**
 	 * Nastavi sablonu tlacitka
 	 * @param string $button
+	 * @return static
 	 */
-	public function setButton(string $button): void
+	public function setButton(string $button): self
 	{
 		$this->button = $button;
+		return $this;
 	}
 
 	/**
 	 * @param int $orderId
+	 * @return static
 	 */
-	public function setOrderId(int $orderId): void
+	public function setOrderId(int $orderId): self
 	{
 		$this->orderId = $orderId;
+		return $this;
 	}
 
 	/**
 	 * Nastavi menu. Povolene hodnoty jsou GBP, USD, EUR, DKK, NOK, SEK, CHF, CAD, HUF, BHD, AUD, RUB, PLN, RON, HRK, CZK, ISK
 	 * @param string $currency
+	 * @return static
 	 */
-	public function setCurrency(string $currency): void
+	public function setCurrency(string $currency): self
 	{
 		$this->currency = $currency;
+		return $this;
 	}
 
 	/**
 	 * Nastavi jazyk brany. Povolene hodnoty jsou CZ, IS, EN, DE, FR, RU, ES, IT, PT, SI, HU, SE, NL, PL, NO, SK, HR, SR, RO, DK, FI, FO
 	 * @param string $language
+	 * @return static
 	 */
-	public function setLanguage(string $language): void
+	public function setLanguage(string $language): self
 	{
 		$this->language = $language;
+		return $this;
 	}
 
 	/**
@@ -141,12 +156,14 @@ class BPaymentClient extends Control
 	 * @param string $name
 	 * @param int $count
 	 * @param float $price
+	 * @return static
 	 */
-	public function addItem(string $name, int $count, float $price): void
+	public function addItem(string $name, int $count, float $price): self
 	{
 		$item = new Item($name, $count, $price);
 		$this->items[] = $item;
 		$this->amount += $item->totalPrice;
+		return $this;
 	}
 
 	protected function createComponentPaymentForm(): Form
@@ -164,6 +181,7 @@ class BPaymentClient extends Control
 
 		$form->addHidden('merchantid', $this->config->merchantId);
 		$form->addHidden('paymentgatewayid', $this->config->gatewayId);
+		$form->addHidden('skipreceiptpage', $this->redirectAfterPayment ? 1 : 0);
 		$form->addHidden('orderid', $this->orderId);
 		$form->addHidden('reference', $this->orderId);
 		$form->addHidden('checkhash', $hash);
