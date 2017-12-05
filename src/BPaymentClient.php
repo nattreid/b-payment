@@ -8,6 +8,7 @@ use NAttreid\BPayment\Helpers\Item;
 use NAttreid\BPayment\Hooks\BPaymentConfig;
 use NAttreid\Form\Form;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\Request;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
@@ -166,6 +167,10 @@ class BPaymentClient extends Control
 		return $this;
 	}
 
+	/**
+	 * @return Form
+	 * @throws InvalidLinkException
+	 */
 	protected function createComponentPaymentForm(): Form
 	{
 		$successLink = $this->link('//success');
