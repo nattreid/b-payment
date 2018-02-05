@@ -27,11 +27,10 @@ if (trait_exists('NAttreid\Cms\DI\ExtensionTranslatorTrait')) {
 					'webManager'
 				]);
 
-				$bPayment = new Statement('?->bPayment \?: new ' . BPaymentConfig::class, ['@' . Configurator::class]);
+				return new Statement('?->bPayment \?: new ' . BPaymentConfig::class, ['@' . Configurator::class]);
 			} else {
-				$bPayment = parent::prepareHook($bPayment);
+				return parent::prepareHook($bPayment);
 			}
-			return $bPayment;
 		}
 	}
 } else {
