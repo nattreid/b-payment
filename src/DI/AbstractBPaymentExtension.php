@@ -48,5 +48,6 @@ abstract class AbstractBPaymentExtension extends CompilerExtension
 		$bPayment->secretKey = $config['secretKey'];
 		$bPayment->merchantId = $config['merchantId'];
 		$bPayment->gatewayId = $config['gatewayId'];
+		return $bPayment;
 	}
 }
