@@ -42,7 +42,7 @@ abstract class AbstractBPaymentExtension extends CompilerExtension
 			->setArguments([$config['url'], $bPayment]);
 	}
 
-	protected function prepareHook(array $config): BPaymentConfig
+	protected function prepareHook(array $config)
 	{
 		$bPayment = new BPaymentConfig();
 		$bPayment->secretKey = $config['secretKey'];
