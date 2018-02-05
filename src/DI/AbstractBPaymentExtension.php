@@ -6,22 +6,16 @@ namespace NAttreid\BPayment\DI;
 
 use NAttreid\BPayment\BPaymentClient;
 use NAttreid\BPayment\Hooks\BPaymentConfig;
-use NAttreid\BPayment\Hooks\BPaymentHook;
 use NAttreid\BPayment\IBPaymentClientFactory;
-use NAttreid\Cms\Configurator\Configurator;
-use NAttreid\Cms\DI\ExtensionTranslatorTrait;
-use NAttreid\WebManager\Services\Hooks\HookService;
 use Nette\DI\CompilerExtension;
-use Nette\DI\ServiceDefinition;
-use Nette\DI\Statement;
 use Nette\InvalidStateException;
 
 /**
- * Class BPaymentExtension
+ * Class AbstractBPaymentExtension
  *
  * @author Attreid <attreid@gmail.com>
  */
-class AbstractBPaymentExtension extends CompilerExtension
+abstract class AbstractBPaymentExtension extends CompilerExtension
 {
 
 	private $defaults = [
