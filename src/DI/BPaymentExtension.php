@@ -15,7 +15,7 @@ if (trait_exists('NAttreid\Cms\DI\ExtensionTranslatorTrait')) {
 	{
 		use ExtensionTranslatorTrait;
 
-		protected function prepareHook(array $bPayment)
+		protected function prepareConfig(array $bPayment)
 		{
 			$builder = $this->getContainerBuilder();
 			$hook = $builder->getByType(HookService::class);
@@ -29,7 +29,7 @@ if (trait_exists('NAttreid\Cms\DI\ExtensionTranslatorTrait')) {
 
 				return new Statement('?->bPayment \?: new ' . BPaymentConfig::class, ['@' . Configurator::class]);
 			} else {
-				return parent::prepareHook($bPayment);
+				return parent::prepareConfig($bPayment);
 			}
 		}
 	}

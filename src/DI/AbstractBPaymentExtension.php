@@ -34,7 +34,7 @@ abstract class AbstractBPaymentExtension extends CompilerExtension
 			throw new InvalidStateException("B-Payment: 'url' does not set in config.neon");
 		}
 
-		$bPayment = $this->prepareHook($config);
+		$bPayment = $this->prepareConfig($config);
 
 		$builder->addDefinition($this->prefix('client'))
 			->setImplement(IBPaymentClientFactory::class)
@@ -42,12 +42,13 @@ abstract class AbstractBPaymentExtension extends CompilerExtension
 			->setArguments([$config['url'], $bPayment]);
 	}
 
-	protected function prepareHook(array $config)
+	protected function prepareConfig(array $config)
 	{
-		$bPayment = new BPaymentConfig();
-		$bPayment->secretKey = $config['secretKey'];
-		$bPayment->merchantId = $config['merchantId'];
-		$bPayment->gatewayId = $config['gatewayId'];
-		return $bPayment;
+		$builder = $this->getContainerBuilder();
+		return $builder->addDefinition($this->prefix('config'))
+			->setFactory(BPaymentConfig::class)
+			->addSetup('$secretKey', [$config['secretKey']])
+			->addSetup('$merchantId', [$config['merchantId']])
+			->addSetup('$gatewayId', [$config['gatewayId']]);
 	}
 }
