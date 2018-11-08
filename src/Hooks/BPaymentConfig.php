@@ -9,9 +9,9 @@ use Nette\SmartObject;
 /**
  * Class BPaymentConfig
  *
- * @property string $secretKey
- * @property int $merchantId
- * @property int $gatewayId
+ * @property string|null $secretKey
+ * @property int|null $merchantId
+ * @property int|null $gatewayId
  *
  * @author Attreid <attreid@gmail.com>
  */
@@ -19,13 +19,13 @@ class BPaymentConfig
 {
 	use SmartObject;
 
-	/** @var string */
+	/** @var string|null */
 	private $secretKey;
 
-	/** @var int */
+	/** @var int|null */
 	private $merchantId;
 
-	/** @var int */
+	/** @var int|null */
 	private $gatewayId;
 
 	protected function getSecretKey(): ?string
