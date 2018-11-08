@@ -17,7 +17,7 @@ bPayments:
 public $bPaymentFactory;
 
 protected function createComponentBPayment($name) {
-    $bPayment = $this->$bPaymentFactory->create($this, $name);
+    $bPayment = $this->bPaymentFactory->create($this, $name);
     
     $bPayment->setOrderId(123456);
     $bPayment->setCurrency('CZK');
