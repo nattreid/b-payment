@@ -51,9 +51,6 @@ class BPaymentClient extends Control
 	/** @var Request */
 	private $request;
 
-	/** @var string */
-	private $button = __DIR__ . '/templates/button.latte';
-
 	/** @var callback[] */
 	public $onSuccess = [];
 
@@ -107,17 +104,6 @@ class BPaymentClient extends Control
 	public function setRedirectAfterPayment(bool $redirect = false): void
 	{
 		$this->redirectAfterPayment = $redirect;
-	}
-
-	/**
-	 * Nastavi sablonu tlacitka
-	 * @param string $button
-	 * @return static
-	 */
-	public function setButton(string $button): self
-	{
-		$this->button = $button;
-		return $this;
 	}
 
 	/**
@@ -229,11 +215,13 @@ class BPaymentClient extends Control
 		return hash_hmac('sha256', implode('|', $data), $this->config->secretKey);
 	}
 
-	public function render(): void
+	public function render($text = "Pay", $attrs = []): void
 	{
-		$this->template->setFile(__DIR__ . '/templates/bpayment.latte');
-		$this->template->button = $this->button;
-		$this->template->render();
+		$template = $this->template;
+		$template->setFile(__DIR__ . '/templates/default.latte');
+		$template->text = $text;
+		$template->attrs = $attrs;
+		$template->render();
 	}
 }
 

@@ -41,5 +41,5 @@ protected function createComponentBPayment($name) {
 ```
 
 ```latte
-{control $bPayment}
+{control bPayment, 'Pay', [class => button]}
 ```
