@@ -23,8 +23,6 @@ protected function createComponentBPayment($name) {
     $bPayment->setCurrency('CZK');
     $bPayment->setLanguage('CZ');
     $bPayment->addItem('Polozka', 4, 999.9);
-
-    $bPayment->setButton(__DIR__.'/button.latte'); // zmena sablony tlacitka
     
     $bPayment->onSuccess[] = function($orderId, $authorizationCode) {
         
